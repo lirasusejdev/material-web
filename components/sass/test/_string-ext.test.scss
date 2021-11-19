@@ -1,0 +1,98 @@
+//
+// Copyright 2021 Google LLC
+// SPDX-License-Identifier: Apache-2.0
+//
+
+@use 'true' as *;
+@use '../string-ext';
+
+@include describe('string-ext') {
+  @include describe('has-prefix()') {
+    @include it('should return true if the string has the prefix') {
+      @include assert-true(string-ext.has-prefix('foo', 'f'));
+    }
+
+    @include it('should return false if the string does not have the prefix') {
+      @include assert-false(string-ext.has-prefix('foo', 'b'));
+    }
+  }
+
+  @include describe('has-suffix()') {
+    @include it('should return true if the string has the suffix') {
+      @include assert-true(string-ext.has-suffix('foo', 'o'));
+    }
+
+    @include it('should return false if the string does not have the suffix') {
+      @include assert-false(string-ext.has-suffix('foo', 'b'));
+    }
+  }
+
+  @include describe('trim-prefix()') {
+    @include it('should return the string with the prefix removed') {
+      @include assert-equal(string-ext.trim-prefix('foo', 'fo'), 'o');
+    }
+
+    @include it('should return the string with a repeating prefix removed') {
+      @include assert-equal(string-ext.trim-prefix('babar', 'ba'), 'r');
+    }
+
+    @include it('should do nothing if the prefix does not exist') {
+      @include assert-equal(string-ext.trim-prefix('foo', 'bar'), 'foo');
+    }
+  }
+
+  @include describe('trim-prefix-once()') {
+    @include it('should only trim the prefix once') {
+      @include assert-equal(string-ext.trim-prefix-once('babar', 'ba'), 'bar');
+    }
+  }
+
+  @include describe('trim-suffix()') {
+    @include it('should return the string with the suffix removed') {
+      @include assert-equal(string-ext.trim-suffix('babar', 'bar'), 'ba');
+    }
+
+    @include it('should return the string with a repeating suffix removed') {
+      @include assert-equal(string-ext.trim-suffix('foo', 'o'), 'f');
+    }
+
+    @include it('should do nothing if the suffix does not exist') {
+      @include assert-equal(string-ext.trim-suffix('foo', 'bar'), 'foo');
+    }
+  }
+
+  @include describe('trim-suffix-once()') {
+    @include it('should only trim the suffix once') {
+      @include assert-equal(string-ext.trim-suffix-once('foo', 'o'), 'fo');
+    }
+  }
+
+  @include describe('trim()') {
+    @include it('should trim the same repeating prefix and suffix') {
+      @include assert-equal(string-ext.trim('  foo bar  ', ' '), 'foo bar');
+    }
+
+    @include it('should trim different repeating prefixes and suffixes') {
+      @include assert-equal(
+        string-ext.trim('fffoo barrr', $prefix: 'f', $suffix: 'r'),
+        'oo ba'
+      );
+    }
+  }
+
+  @include describe('trim-once()') {
+    @include it('should trim the a single prefix and suffix') {
+      @include assert-equal(
+        string-ext.trim-once('  foo bar  ', ' '),
+        ' foo bar '
+      );
+    }
+
+    @include it('should trim different prefixes and suffixes') {
+      @include assert-equal(
+        string-ext.trim-once('fffoo barrr', $prefix: 'f', $suffix: 'r'),
+        'ffoo barr'
+      );
+    }
+  }
+}
